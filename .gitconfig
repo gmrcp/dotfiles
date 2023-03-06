@@ -1,0 +1,5 @@
+[fetch]
+	prune = true
+[user]
+	email = @gmail.com
+	name = gmrcp
