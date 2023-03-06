@@ -95,6 +95,7 @@ do
     cp .gitconfig $dir
     echo "export GH_CONFIG_DIR=$dir/.config/gh" >> $dir/.envrc
     echo "export GIT_CONFIG_GLOBAL=$dir/.gitconfig" >> $dir/.envrc
+    echo "export GIT_SSH_COMMAND='ssh -i ~/.ssh/CHANGE_THIS'" # According to SSH keys generated
     direnv allow $dir
 done
 
