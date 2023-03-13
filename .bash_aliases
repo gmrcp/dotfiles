@@ -21,4 +21,4 @@ mkcd() {
     mkdir "$1" && cd "$1" || exit
 }
 alias mkcd=mkcd
-alias shrel='exec bash'
+alias shrel='exec $SHELL'

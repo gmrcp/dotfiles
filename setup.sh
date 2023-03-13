@@ -35,23 +35,6 @@ install_apt_get() {
     (yecho "$1 not found, installing via apt-get..." && sudo apt-get install -y "$1")
 }
 
-# ---
-# Install git-completion and git-prompt
-# ---
-# cd || exit
-# curl https://raw.github.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
-# curl https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
-# echo "git-completion and git-prompt Installed and Configured" >> $log_file
-
-# ---
-# Install nvm
-# ---
-# cd || exit
-# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-
-# nvm install 'lts/*'
-# command -v nvm
-
 # check for pre-req, fail if not found
 check_preq() {
     (command -v "$1" >/dev/null && gecho "$1 found...") ||
@@ -73,10 +56,37 @@ add_line_to_rc() {
     echo "$1" >> ~/$rc_file
 }
 
-link_dotfile .bash_aliases
+# ---
+# Install git-completion and git-prompt
+# ---
+cd || exit
+curl https://raw.github.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
+curl https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
+echo "git-completion and git-prompt Installed and Configured" >> $log_file
 
+# ---
+# Install nvm
+# ---
+cd || exit
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+
+nvm install 'lts/*'
+command -v nvm
+
+# ---
+# Install Rust toolchain
+# ---
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+
+# ---
+# Install Pyenv
+# ---
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+cd ~/.pyenv && src/configure && make -C src
+sudo apt-get install -y zlib1g zlib1g-dev libssl-dev libbz2-dev libsqlite3-dev libncursesw5-dev libncurses5-dev tk-dev liblzma-dev libreadline-dev # necessary dependencies for pyenv
+
+link_dotfile .bash_aliases
 link_dotfile .bash_profile
-add_line_to_rc 'source ~/.bash_profile'
 
 install_apt_get direnv
 add_line_to_rc 'eval "$(direnv hook bash)"'
@@ -86,7 +96,7 @@ add_line_to_rc 'eval "$(direnv hook bash)"'
 # direnv for multiple gh accounts
 #==============
 personal_dir=~/Projects/Personal
-work_dir=~/Projects/Flair
+work_dir=~/Projects/Work
 gh_dir=~/.config/gh
 
 for dir in $personal_dir $work_dir
@@ -99,6 +109,7 @@ do
     direnv allow $dir
 done
 
+add_line_to_rc 'source ~/.bash_profile'
 
 #==============
 # Give the user a summary of what has been installed
@@ -108,4 +119,4 @@ cat $log_file
 rm $log_file
 
 # reload shell 
-exec bash
+exec $SHELL

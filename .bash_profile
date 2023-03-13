@@ -47,3 +47,11 @@ if [ -f ~/.git-prompt.sh ]; then
   GIT_PS1_SHOWCOLORHINTS=true
   . ~/.git-prompt.sh
 fi
+
+# ==============
+# pyenv config
+# might need to be introduced in .bashrc because of load order
+# ==============
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
